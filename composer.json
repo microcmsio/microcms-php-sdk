@@ -14,5 +14,8 @@
             "name": "Tsubasa Irisawa",
             "email": "lambdasawa@gmail.com"
         }
-    ]
+    ],
+    "require-dev": {
+        "psy/psysh": "@stable"
+    }
 }
