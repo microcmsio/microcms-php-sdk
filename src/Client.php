@@ -1,6 +1,6 @@
 <?php
 
-namespace Lambdasawa\MicrocmsPhpSdk;
+namespace Microcms;
 
 class Client
 {

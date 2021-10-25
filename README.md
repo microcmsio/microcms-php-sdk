@@ -3,13 +3,13 @@
 ## Installation
 
 ```sh
-$ composer require lambdasawa/microcms-php-sdk
+$ composer require microcms/microcms-php-sdk
 ```
 
 ## Usage
 
 ```php
-$client = new \Lambdasawa\MicrocmsPhpSdk\Client(
+$client = new \MicrocmsPhpSdk\Client(
   "XXXX",  // YOUR_DOMAIN is the XXXX part of XXXX.microcms.io
   "XXX"    // API Key
 ));

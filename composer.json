@@ -1,5 +1,5 @@
 {
-    "name": "lambdasawa/microcms-php-sdk",
+    "name": "microcms/microcms-php-sdk",
     "type": "library",
     "require": {
         "guzzlehttp/guzzle": "^7.0",
@@ -7,13 +7,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Lambdasawa\\MicrocmsPhpSdk\\": "src/"
+            "Microcms\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "Tsubasa Irisawa",
-            "email": "lambdasawa@gmail.com"
+            "name": "microCMS",
+            "homepage": "https://github.com/microcmsio/microcms-php-sdk/contributors"
         }
     ],
     "require-dev": {
