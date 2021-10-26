@@ -49,7 +49,7 @@ var_dump($client.create("blog", [
 
 var_dump($client.update("blog", [
     "id" => "my-content-id",
-    "title" => "Hello, microCMS Ruby SDK!"
+    "title" => "Hello, microCMS PHP SDK!"
 ]));
 
 var_dump($client.delete("blog", "my-content-id"));
