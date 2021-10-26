@@ -117,7 +117,7 @@ class Client
                         $options["depth"] :
                         null,
             ],
-            function ($k, $v) {
+            function ($v, $k) {
                 return $v;
             },
             ARRAY_FILTER_USE_BOTH
