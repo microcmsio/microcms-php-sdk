@@ -3,7 +3,7 @@
 ## Installation
 
 ```sh
-$ composer require microcms/microcms-php-sdk
+$ composer require microcmsio/microcms-php-sdk
 ```
 
 ## Usage
