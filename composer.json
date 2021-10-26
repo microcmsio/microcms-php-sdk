@@ -19,6 +19,7 @@
         }
     ],
     "require-dev": {
-        "psy/psysh": "@stable"
+        "psy/psysh": "@stable",
+        "phpstan/phpstan": "^0.12.99"
     }
 }
