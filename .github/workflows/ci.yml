@@ -7,21 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  php-cs-fixer:
-
-    name: PHP-CS-Fixer
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: PHP-CS-Fixer
-      uses: docker://oskarstark/php-cs-fixer-ga
-      with:
-        args: --diff --dry-run src/
-
-  build:
+  tests:
 
     runs-on: ubuntu-latest
 
@@ -43,7 +29,12 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: Run phpstan
+    - name: Run formatter
+      uses: docker://oskarstark/php-cs-fixer-ga
+      with:
+        args: --diff --dry-run src/
+
+    - name: Run linter
       run: vendor/bin/phpstan analyse --level 5 src/
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
