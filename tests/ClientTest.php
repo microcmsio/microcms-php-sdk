@@ -15,7 +15,8 @@ final class ClientTest extends TestCase
     private $mock;
     private $container;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         $this->handlerStack = HandlerStack::create();
         $this->container = [];
 
