@@ -4,16 +4,21 @@ namespace Microcms;
 
 class Client
 {
+    private $serviceDomain;
+    private $apiKey;
+
     private $client;
 
-    public function __construct(string $serviceDomain, string $apiKey)
+    public function __construct(string $serviceDomain, string $apiKey, \GuzzleHttp\ClientInterface $client = null)
     {
-        $this->client = new \GuzzleHttp\Client([
-            'base_uri' => sprintf("https://%s.microcms.io/api/v1/", $serviceDomain),
-            'headers' => [
-                'X-MICROCMS-API-KEY' => $apiKey,
-            ]
-        ]);
+        $this->serviceDomain = $serviceDomain;
+        $this->apiKey = $apiKey;
+
+        if (is_null($client)) {
+            $this->client = new \GuzzleHttp\Client();
+        } else {
+            $this->client = $client;
+        }
     }
 
     public function list(string $endpoint, array $options = [])
@@ -21,9 +26,9 @@ class Client
         $path = $endpoint;
         $response = $this->client->get(
             $path,
-            [
+            $this->buildOption([
                 "query" => $this->buildQuery($options)
-            ]
+            ])
         );
         return json_decode($response->getBody());
     }
@@ -33,9 +38,9 @@ class Client
         $path = implode("/", [$endpoint, $contentId]);
         $response = $this->client->get(
             $path,
-            [
+            $this->buildOption([
                 "query" => $this->buildQuery($options)
-            ]
+            ])
         );
         return json_decode($response->getBody());
     }
@@ -53,9 +58,9 @@ class Client
         $response = $this->client->request(
             $method,
             $path,
-            [
+            $this->buildOption([
                 "json" => $body,
-            ]
+            ])
         );
         return json_decode($response->getBody());
     }
@@ -64,9 +69,15 @@ class Client
     {
         $response = $this->client->patch(
             implode("/", [$endpoint, $body["id"]]),
-            [
-                "json" => $body,
-            ]
+            $this->buildOption([
+                "json" => array_filter(
+                    $body,
+                    function ($v, $k) {
+                        return $k != "id";
+                    },
+                    ARRAY_FILTER_USE_BOTH
+                ),
+            ])
         );
         return json_decode($response->getBody());
     }
@@ -74,7 +85,20 @@ class Client
     public function delete(string $endpoint, string $id)
     {
         $path = implode("/", [$endpoint, $id]);
-        $this->client->delete($path);
+        $this->client->delete($path, $this->buildOption());
+    }
+
+    private function buildOption(array $option = [])
+    {
+        return array_merge(
+            [
+                'base_uri' => sprintf("https://%s.microcms.io/api/v1/", $this->serviceDomain),
+                'headers' => [
+                    'X-MICROCMS-API-KEY' => $this->apiKey,
+                ]
+            ],
+            $option
+        );
     }
 
     private function buildQuery(array $options)

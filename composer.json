@@ -12,6 +12,11 @@
             "Microcms\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Microcms\\Test\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "microCMS",

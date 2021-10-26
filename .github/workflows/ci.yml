@@ -33,16 +33,18 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: Run formatter
+    - name: Run formatter (src/)
       uses: docker://oskarstark/php-cs-fixer-ga
       with:
         args: --diff --dry-run src/
 
+    - name: Run formatter (tests/)
+      uses: docker://oskarstark/php-cs-fixer-ga
+      with:
+        args: --diff --dry-run tests/
+
     - name: Run linter
-      run: vendor/bin/phpstan analyse --level 5 src/
+      run: vendor/bin/phpstan analyse --level 5 src/ tests/
 
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
-
-    # - name: Run test suite
-    #   run: composer run-script test
+    - name: Run test suite
+      run: vendor/bin/phpunit tests/
