@@ -1,5 +1,5 @@
 {
-    "name": "microcms/microcms-php-sdk",
+    "name": "microcmsio/microcms-php-sdk",
     "type": "library",
     "require": {
         "guzzlehttp/guzzle": "^7.0",
