@@ -77,7 +77,8 @@ class Client
         $this->client->delete($path);
     }
 
-    private function buildQuery(array $options) {
+    private function buildQuery(array $options)
+    {
         return array_filter(
             [
                 "draftKey" =>
