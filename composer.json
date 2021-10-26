@@ -1,6 +1,7 @@
 {
     "name": "microcmsio/microcms-php-sdk",
     "description": "microCMS PHP SDK",
+    "license": "Apache-2.0",
     "type": "library",
     "require": {
         "guzzlehttp/guzzle": "^7.0",
