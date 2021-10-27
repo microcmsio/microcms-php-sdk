@@ -9,48 +9,55 @@ $ composer require microcmsio/microcms-php-sdk
 ## Usage
 
 ```php
-$client = new \MicrocmsPhpSdk\Client(
-  "XXXX",  // YOUR_DOMAIN is the XXXX part of XXXX.microcms.io
-  "XXX"    // API Key
-));
+<?php
 
-var_dump($client->list("blog"));
-var_dump($client->list("tag"));
+require_once('vendor/autoload.php');
 
-var_dump($client->list("blog", [
-    "draftKey" => "foo",
-    "limit" => 10,
-    "offset" => 1,
-    "orders" => ["createdAt", "-updatedAt"],
-    "q" => "PHP",
-    "fields" => ["id", "title"],
-    "filters" => "title[contains]microCMS",
-    "depth" => 1
-]));
+$client = new \Microcms\Client(
+  "YOUR_DOMAIN",  // YOUR_DOMAIN is the XXXX part of XXXX.microcms.io
+  "YOUR_API_KEY"  // API Key
+);
 
-var_dump($client.get("blog", "my-content-id"));
+echo $client->list("blog")->contents[0]->title;
 
-var_dump($client.get("blog", "my-content-id", [
-    "draftKey" => "foo",
-    "fields" => ["id", "title"],
-    "depth" => 1,
-]));
+$list = $client->list("blog", [
+  "draftKey" => "foo",
+  "limit" => 10,
+  "offset" => 1,
+  "orders" => ["createdAt", "-updatedAt"],
+  "q" => "PHP",
+  "fields" => ["id", "title"],
+  "filters" => "title[contains]microCMS",
+  "depth" => 1
+]);
+echo $list->contents[0]->title;
 
-var_dump($client.create("blog", []
-    "title" => "Hello, microCMS!",
-    "contents" => "Awesome contents..."
-]));
+echo $client->get("blog", "my-content-id")->title;
 
-var_dump($client.create("blog", [
-    "id" => "my-content-id",
-    "title" => "Hello, microCMS!",
-    "contents" => "Awesome contents..."
-]));
+echo $client->get("blog", "my-content-id", [
+  "draftKey" => "foo",
+  "fields" => ["id", "title"],
+  "depth" => 1,
+])->title;
 
-var_dump($client.update("blog", [
-    "id" => "my-content-id",
-    "title" => "Hello, microCMS PHP SDK!"
-]));
+$createResult = $client->create("blog", [
+  "title" => "Hello, microCMS!",
+  "contents" => "Awesome contents..."
+]);
+echo $createResult->id;
 
-var_dump($client.delete("blog", "my-content-id"));
+$createResult = $client->create("blog", [
+  "id" => "new-my-content-id",
+  "title" => "Hello, microCMS!",
+  "contents" => "Awesome contents..."
+]);
+echo $createResult->id;
+
+$updateResult = $client->update("blog", [
+  "id" => "new-my-content-id",
+  "title" => "Hello, microCMS PHP SDK!"
+]);
+echo $updateResult->id;
+
+$client->delete("blog", "new-my-content-id");
 ```
