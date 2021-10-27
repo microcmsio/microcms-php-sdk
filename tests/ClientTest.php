@@ -167,7 +167,8 @@ final class ClientTest extends TestCase
         ));
 
         $client = new Client("service", "key", new \GuzzleHttp\Client(['handler' => $this->handlerStack]));
-        $result = $client->create("blog",
+        $result = $client->create(
+            "blog",
             [
                 "title" => "foo"
             ],
