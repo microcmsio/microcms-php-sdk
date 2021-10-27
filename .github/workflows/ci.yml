@@ -21,7 +21,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@master
       with:
-        php-version: ${{ matrix.php-version }}
+        php-version: ${{ matrix.php-versions }}
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
