@@ -156,6 +156,38 @@ final class ClientTest extends TestCase
         $this->assertEquals("my-content-id", $result->id);
     }
 
+    public function testCreateDraft(): void
+    {
+        $this->mock->append(new Response(
+            201,
+            [],
+            <<<JSON
+                {"id": "my-content-id"}
+            JSON
+        ));
+
+        $client = new Client("service", "key", new \GuzzleHttp\Client(['handler' => $this->handlerStack]));
+        $result = $client->create("blog",
+            [
+                "title" => "foo"
+            ],
+            [
+                "status" => "draft"
+            ]
+        );
+
+        $request = $this->container[0]['request'];
+        $this->assertEquals("POST", $request->getMethod());
+        $this->assertEquals("https://service.microcms.io/api/v1/blog?status=draft", $request->getUri());
+        $this->assertEquals("key", $request->getHeader('X-MICROCMS-API-KEY')[0]);
+        $this->assertEquals(
+            ["title" => "foo"],
+            json_decode($request->getBody(), true)
+        );
+
+        $this->assertEquals("my-content-id", $result->id);
+    }
+
     public function testUpdate(): void
     {
         $this->mock->append(new Response(

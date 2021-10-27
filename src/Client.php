@@ -45,7 +45,7 @@ class Client
         return json_decode($response->getBody());
     }
 
-    public function create(string $endpoint, array $body = [])
+    public function create(string $endpoint, array $body = [], array $options = [])
     {
         if (array_key_exists("id", $body)) {
             $method = "PUT";
@@ -60,6 +60,7 @@ class Client
             $path,
             $this->buildOption([
                 "json" => $body,
+                "query" => $options
             ])
         );
         return json_decode($response->getBody());

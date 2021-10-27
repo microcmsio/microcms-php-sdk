@@ -57,6 +57,16 @@ $createResult = $client->create("blog", [
 ]);
 echo $createResult->id;
 
+$createResult = $client->create(
+  "blog", 
+  [
+    "title" => "Hello, microCMS!",
+    "contents" => "Awesome contents..."
+  ],
+  [ "status" => "draft" ]
+);
+echo $createResult->id;
+
 $updateResult = $client->update("blog", [
   "id" => "new-my-content-id",
   "title" => "Hello, microCMS PHP SDK!"
