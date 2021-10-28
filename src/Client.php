@@ -33,9 +33,9 @@ class Client
         return json_decode($response->getBody());
     }
 
-    public function get(string $endpoint, string $contentId, array $options = [])
+    public function get(string $endpoint, string $contentId = "", array $options = [])
     {
-        $path = implode("/", [$endpoint, $contentId]);
+        $path = $contentId ? implode("/", [$endpoint, $contentId]) : $endpoint;
         $response = $this->client->get(
             $path,
             $this->buildOption([
@@ -69,7 +69,7 @@ class Client
     public function update(string $endpoint, array $body = [])
     {
         $response = $this->client->patch(
-            implode("/", [$endpoint, $body["id"]]),
+            array_key_exists("id", $body) ? implode("/", [$endpoint, $body["id"]]) : $endpoint,
             $this->buildOption([
                 "json" => array_filter(
                     $body,
