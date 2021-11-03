@@ -1,4 +1,6 @@
-# microcms-php-sdk
+# microCMS PHP SDK
+
+[microCMS](https://document.microcms.io/manual/api-request) PHP SDK.
 
 ## Tutorial
 
@@ -12,19 +14,36 @@ $ composer require microcmsio/microcms-php-sdk
 
 ## Usage
 
+### Import
+
 ```php
 <?php
 
 require_once('vendor/autoload.php');
 
-$client = new \Microcms\Client(
+use \Microcms;
+```
+
+### Create client object
+
+```php
+$client = new \Client(
   "YOUR_DOMAIN",  // YOUR_DOMAIN is the XXXX part of XXXX.microcms.io
   "YOUR_API_KEY"  // API Key
 );
+```
 
-echo $client->list("blog")->contents[0]->title;
+### Get content list
 
-$list = $client->list("blog", [
+```php
+$list = $client->list("endpoint");
+echo $list->contents[0]->title;
+```
+
+### Get content list with parameters
+
+```php
+$list = $client->list("endpoint", [
   "draftKey" => "foo",
   "limit" => 10,
   "offset" => 1,
@@ -35,30 +54,65 @@ $list = $client->list("blog", [
   "depth" => 1
 ]);
 echo $list->contents[0]->title;
+```
 
-echo $client->get("blog", "my-content-id")->title;
+### Get single content
 
-echo $client->get("blog", "my-content-id", [
+```php
+$object = $client->get("endpoint", "my-content-id");
+echo $object->title;
+```
+
+### Get single content with parameters
+
+```php
+$object = $client->get("endpoint", "my-content-id", [
   "draftKey" => "foo",
   "fields" => ["id", "title"],
   "depth" => 1,
-])->title;
-
-$createResult = $client->create("blog", [
-  "title" => "Hello, microCMS!",
-  "contents" => "Awesome contents..."
 ]);
-echo $createResult->id;
+echo $object->title;
+```
 
-$createResult = $client->create("blog", [
-  "id" => "new-my-content-id",
-  "title" => "Hello, microCMS!",
-  "contents" => "Awesome contents..."
-]);
-echo $createResult->id;
+### Get object form content
 
+```php
+$object = $client->get("endpoint");
+echo $object->title;
+```
+
+### Create content
+
+```php
 $createResult = $client->create(
-  "blog", 
+  "endpoint",
+  [
+    "title" => "Hello, microCMS!",
+    "contents" => "Awesome contents..."
+  ]
+);
+echo $createResult->id;
+```
+
+### Create content with specified ID
+
+```php
+$createResult = $client->create(
+  "endpoint",
+  [
+    "id" => "new-my-content-id",
+    "title" => "Hello, microCMS!",
+    "contents" => "Awesome contents..."
+  ]
+);
+echo $createResult->id;
+```
+
+### Create draft content
+
+```php
+$createResult = $client->create(
+  "endpoint",
   [
     "title" => "Hello, microCMS!",
     "contents" => "Awesome contents..."
@@ -66,12 +120,29 @@ $createResult = $client->create(
   [ "status" => "draft" ]
 );
 echo $createResult->id;
+```
 
-$updateResult = $client->update("blog", [
+### Update content
+
+```php
+$updateResult = $client->update("endpoint", [
   "id" => "new-my-content-id",
   "title" => "Hello, microCMS PHP SDK!"
 ]);
 echo $updateResult->id;
+```
 
-$client->delete("blog", "new-my-content-id");
+### Update object form content
+
+```php
+$updateResult = $client->update("endpoint", [
+  "title" => "Hello, microCMS PHP SDK!"
+]);
+echo $updateResult->id;
+```
+
+### Delete content
+
+```php
+$client->delete("endpoint", "new-my-content-id");
 ```
