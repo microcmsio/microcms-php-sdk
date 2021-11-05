@@ -21,13 +21,13 @@ $ composer require microcmsio/microcms-php-sdk
 
 require_once('vendor/autoload.php');
 
-use \Microcms;
+use \Microcms\Client;
 ```
 
 ### Create client object
 
 ```php
-$client = new \Client(
+$client = new Client(
   "YOUR_DOMAIN",  // YOUR_DOMAIN is the XXXX part of XXXX.microcms.io
   "YOUR_API_KEY"  // API Key
 );
