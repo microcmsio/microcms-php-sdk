@@ -22,7 +22,7 @@ jobs:
       uses: step-security/setup-php@0b4c3f57a1fb50d5cc8172a9700f35b97b3b5d97 # v2.37.0
       with:
         php-version: ${{ env.MAIN_PHP_VERSION }}
-        tools: composer, php-cs-fixer, phpstan
+        tools: composer, php-cs-fixer
       env:
         fail-fast: true
 
@@ -38,7 +38,7 @@ jobs:
         php-cs-fixer fix --diff --dry-run tests/
 
     - name: Run linter
-      run: phpstan analyse --level 8 src/ tests/
+      run: vendor/bin/phpstan analyse --level 8 src/ tests/
 
   tests:
     runs-on: ubuntu-latest
@@ -57,7 +57,7 @@ jobs:
       uses: step-security/setup-php@0b4c3f57a1fb50d5cc8172a9700f35b97b3b5d97 # v2.37.0
       with:
         php-version: ${{ matrix.php-versions }}
-        tools: composer, phpunit
+        tools: composer
       env:
         fail-fast: true
 
@@ -65,4 +65,4 @@ jobs:
       run: composer install --prefer-dist --no-progress
 
     - name: Run test suite
-      run: phpunit tests/
+      run: vendor/bin/phpunit tests/
