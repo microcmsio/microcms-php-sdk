@@ -23,8 +23,10 @@ class Client
 
     /**
      * @param array<string, mixed> $options
+     *
+     * @return mixed
      */
-    public function list(string $endpoint, array $options = []): mixed
+    public function list(string $endpoint, array $options = [])
     {
         $path = $endpoint;
         $response = $this->client->get(
@@ -38,8 +40,10 @@ class Client
 
     /**
      * @param array<string, mixed> $options
+     *
+     * @return mixed
      */
-    public function get(string $endpoint, string $contentId = "", array $options = []): mixed
+    public function get(string $endpoint, string $contentId = "", array $options = [])
     {
         $path = $contentId ? implode("/", [$endpoint, $contentId]) : $endpoint;
         $response = $this->client->get(
@@ -54,8 +58,10 @@ class Client
     /**
      * @param array<string, mixed> $body
      * @param array<string, mixed> $options
+     *
+     * @return mixed
      */
-    public function create(string $endpoint, array $body = [], array $options = []): mixed
+    public function create(string $endpoint, array $body = [], array $options = [])
     {
         if (array_key_exists("id", $body)) {
             $method = "PUT";
@@ -78,8 +84,10 @@ class Client
 
     /**
      * @param array<string, mixed> $body
+     *
+     * @return mixed
      */
-    public function update(string $endpoint, array $body = []): mixed
+    public function update(string $endpoint, array $body = [])
     {
         $response = $this->client->patch(
             array_key_exists("id", $body) ? implode("/", [$endpoint, $body["id"]]) : $endpoint,
