@@ -7,5 +7,6 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@PER-CS' => true,
         'trailing_comma_in_multiline' => false,
+        'operator_linebreak' => ['position' => 'end'],
     ])
     ->setFinder($finder);
