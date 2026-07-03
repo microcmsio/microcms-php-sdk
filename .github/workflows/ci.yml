@@ -6,14 +6,12 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  MAIN_PHP_VERSION: '8.5'
+
 jobs:
-  tests:
-
+  lint:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        php-versions: ['7.3', '7.4', '8.0']
 
     steps:
     - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -23,7 +21,7 @@ jobs:
     - name: Setup PHP
       uses: step-security/setup-php@0b4c3f57a1fb50d5cc8172a9700f35b97b3b5d97 # v2.37.0
       with:
-        php-version: ${{ matrix.php-versions }}
+        php-version: ${{ env.MAIN_PHP_VERSION }}
       env:
         fail-fast: true
 
@@ -35,9 +33,9 @@ jobs:
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        key: ${{ runner.os }}-php-${{ env.MAIN_PHP_VERSION }}-${{ hashFiles('**/composer.lock') }}
         restore-keys: |
-          ${{ runner.os }}-php-
+          ${{ runner.os }}-php-${{ env.MAIN_PHP_VERSION }}-
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
@@ -54,6 +52,38 @@ jobs:
 
     - name: Run linter
       run: vendor/bin/phpstan analyse --level 5 src/ tests/
+
+  tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php-versions: ['7.4', ${{ env.MAIN_PHP_VERSION }}]
+
+    steps:
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      with:
+        persist-credentials: false
+
+    - name: Setup PHP
+      uses: step-security/setup-php@0b4c3f57a1fb50d5cc8172a9700f35b97b3b5d97 # v2.37.0
+      with:
+        php-version: ${{ matrix.php-versions }}
+      env:
+        fail-fast: true
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ matrix.php-versions }}-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-${{ matrix.php-versions }}-
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
 
     - name: Run test suite
       run: vendor/bin/phpunit tests/
