@@ -32,8 +32,10 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: Run formatter (src directory and tests directory)
-      run: php-cs-fixer fix --diff --dry-run src/ tests/
+    - name: Run formatter
+      run: |
+        php-cs-fixer fix --diff --dry-run src/
+        php-cs-fixer fix --diff --dry-run tests/
 
     - name: Run linter
       run: phpstan analyse --level 8 src/ tests/
