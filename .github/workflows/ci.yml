@@ -22,36 +22,21 @@ jobs:
       uses: step-security/setup-php@0b4c3f57a1fb50d5cc8172a9700f35b97b3b5d97 # v2.37.0
       with:
         php-version: ${{ env.MAIN_PHP_VERSION }}
+        tools: composer, php-cs-fixer, phpstan
       env:
         fail-fast: true
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
 
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ env.MAIN_PHP_VERSION }}-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-${{ env.MAIN_PHP_VERSION }}-
-
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: Run formatter (src/)
-      uses: docker://oskarstark/php-cs-fixer-ga
-      with:
-        args: --diff --dry-run src/
-
-    - name: Run formatter (tests/)
-      uses: docker://oskarstark/php-cs-fixer-ga
-      with:
-        args: --diff --dry-run tests/
+    - name: Run formatter (src directory and tests directory)
+      run: php-cs-fixer fix --diff --dry-run src/ tests/
 
     - name: Run linter
-      run: vendor/bin/phpstan analyse --level 5 src/ tests/
+      run: phpstan analyse --level 8 src/ tests/
 
   tests:
     runs-on: ubuntu-latest
@@ -70,20 +55,12 @@ jobs:
       uses: step-security/setup-php@0b4c3f57a1fb50d5cc8172a9700f35b97b3b5d97 # v2.37.0
       with:
         php-version: ${{ matrix.php-versions }}
+        tools: composer, phpunit
       env:
         fail-fast: true
-
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ matrix.php-versions }}-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-${{ matrix.php-versions }}-
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
     - name: Run test suite
-      run: vendor/bin/phpunit tests/
+      run: phpunit tests/
