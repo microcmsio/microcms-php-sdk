@@ -11,19 +11,22 @@ use PHPUnit\Framework\TestCase;
 
 final class ClientTest extends TestCase
 {
-    private $handlerStack;
-    private $mock;
+    private HandlerStack $handlerStack;
+    private MockHandler $mock;
+
+    /** @var array<int, array<string, mixed>> */
     private $container;
 
     protected function setUp(): void
     {
         $this->handlerStack = HandlerStack::create();
         $this->container = [];
+        $container = &$this->container;
 
         $this->mock = new MockHandler([]);
         $this->handlerStack->setHandler($this->mock);
 
-        $history = Middleware::history($this->container);
+        $history = Middleware::history($container);
         $this->handlerStack->push($history);
     }
 

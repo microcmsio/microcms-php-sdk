@@ -4,12 +4,12 @@ namespace Microcms;
 
 class Client
 {
-    private $serviceDomain;
-    private $apiKey;
+    private string $serviceDomain;
+    private string $apiKey;
 
-    private $client;
+    private \GuzzleHttp\Client $client;
 
-    public function __construct(string $serviceDomain, string $apiKey, \GuzzleHttp\ClientInterface $client = null)
+    public function __construct(string $serviceDomain, string $apiKey, ?\GuzzleHttp\Client $client = null)
     {
         $this->serviceDomain = $serviceDomain;
         $this->apiKey = $apiKey;
@@ -21,6 +21,11 @@ class Client
         }
     }
 
+    /**
+     * @param array<string, mixed> $options
+     *
+     * @return mixed
+     */
     public function list(string $endpoint, array $options = [])
     {
         $path = $endpoint;
@@ -33,6 +38,11 @@ class Client
         return json_decode($response->getBody());
     }
 
+    /**
+     * @param array<string, mixed> $options
+     *
+     * @return mixed
+     */
     public function get(string $endpoint, string $contentId = "", array $options = [])
     {
         $path = $contentId ? implode("/", [$endpoint, $contentId]) : $endpoint;
@@ -45,6 +55,12 @@ class Client
         return json_decode($response->getBody());
     }
 
+    /**
+     * @param array<string, mixed> $body
+     * @param array<string, mixed> $options
+     *
+     * @return mixed
+     */
     public function create(string $endpoint, array $body = [], array $options = [])
     {
         if (array_key_exists("id", $body)) {
@@ -66,6 +82,11 @@ class Client
         return json_decode($response->getBody());
     }
 
+    /**
+     * @param array<string, mixed> $body
+     *
+     * @return mixed
+     */
     public function update(string $endpoint, array $body = [])
     {
         $response = $this->client->patch(
@@ -83,13 +104,18 @@ class Client
         return json_decode($response->getBody());
     }
 
-    public function delete(string $endpoint, string $id)
+    public function delete(string $endpoint, string $id): void
     {
         $path = implode("/", [$endpoint, $id]);
         $this->client->delete($path, $this->buildOption());
     }
 
-    private function buildOption(array $option = [])
+    /**
+     * @param array<string, mixed> $option
+     *
+     * @return array<string, mixed>
+     */
+    private function buildOption(array $option = []): array
     {
         return array_merge(
             [
@@ -102,7 +128,12 @@ class Client
         );
     }
 
-    private function buildQuery(array $options)
+    /**
+     * @param array<string, mixed> $options
+     *
+     * @return array<string, mixed>
+     */
+    private function buildQuery(array $options): array
     {
         return array_filter(
             [
