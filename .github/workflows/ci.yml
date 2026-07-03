@@ -44,7 +44,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php-versions: ['7.4', ${{ env.MAIN_PHP_VERSION }}]
+        php-versions: ['7.4', '8.5']
 
     steps:
     - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
