@@ -1,0 +1,17 @@
+{
+  "name": "microcms-php-sdk",
+  "image": "mcr.microsoft.com/devcontainers/php:8.5",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "xdebug.php-debug",
+        "bmewburn.vscode-intelephense-client",
+        "junstyle.php-cs-fixer"
+      ]
+    }
+  },
+  "postCreateCommand": "composer install"
+}
