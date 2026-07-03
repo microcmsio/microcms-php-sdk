@@ -36,7 +36,7 @@ jobs:
       run: php-cs-fixer fix --diff --dry-run
 
     - name: Run linter
-      run: vendor/bin/phpstan analyse --level 8 src/ tests/
+      run: vendor/bin/phpstan analyse
 
   tests:
     runs-on: ubuntu-latest

@@ -25,7 +25,7 @@
     ],
     "require-dev": {
         "psy/psysh": "@stable",
-        "phpstan/phpstan": "^0.12.99",
+        "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^9.5"
     }
 }
