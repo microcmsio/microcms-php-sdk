@@ -16,19 +16,23 @@ jobs:
         php-versions: ['7.3', '7.4', '8.0']
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      with:
+        persist-credentials: false
 
     - name: Setup PHP
-      uses: shivammathur/setup-php@master
+      uses: step-security/setup-php@0b4c3f57a1fb50d5cc8172a9700f35b97b3b5d97 # v2.37.0
       with:
         php-version: ${{ matrix.php-versions }}
+      env:
+        fail-fast: true
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
 
     - name: Cache Composer packages
       id: composer-cache
-      uses: actions/cache@v2
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: vendor
         key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
