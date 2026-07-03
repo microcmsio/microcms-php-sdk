@@ -6,9 +6,6 @@ $finder = (new PhpCsFixer\Finder())
 return (new PhpCsFixer\Config())
     ->setRules([
         '@PER-CS' => true,
-        'trailing_comma_in_multiline' => [
-            'after_heredoc' => false,
-            'elements' => ['arguments', 'array_destructuring', 'arrays', 'match', 'parameters'],
-        ],
+        'trailing_comma_in_multiline' => false,
     ])
     ->setFinder($finder);
