@@ -1,20 +1,26 @@
 # microCMS PHP SDK
 
-[microCMS](https://document.microcms.io/manual/api-request) PHP SDK.
+[microCMS](https://document.microcms.io/manual/api-request) のPHP SDKです。
 
-## Tutorial
+## 保守方針
 
-See [official tutorial](https://document.microcms.io/tutorial/php/php-top).
+このSDKの現在の保守レベルは `Maintenance` です。
 
-## Installation
+詳細は[SDKの保守方針](https://document.microcms.io/manual/limitations#hc2b0bc6659)をご覧ください。
+
+## チュートリアル
+
+[公式チュートリアル](https://document.microcms.io/tutorial/php/php-top)をご覧ください。
+
+## インストール
 
 ```sh
 $ composer require microcmsio/microcms-php-sdk
 ```
 
-## Usage
+## 使い方
 
-### Import
+### インポート
 
 ```php
 <?php
@@ -24,23 +30,23 @@ require_once('vendor/autoload.php');
 use \Microcms\Client;
 ```
 
-### Create client object
+### クライアントオブジェクトの作成
 
 ```php
 $client = new Client(
-  "YOUR_DOMAIN",  // YOUR_DOMAIN is the XXXX part of XXXX.microcms.io
-  "YOUR_API_KEY"  // API Key
+  "YOUR_DOMAIN",  // YOUR_DOMAINはXXXX.microcms.ioのXXXXの部分です
+  "YOUR_API_KEY"  // APIキー
 );
 ```
 
-### Get content list
+### コンテンツ一覧の取得
 
 ```php
 $list = $client->list("endpoint");
 echo $list->contents[0]->title;
 ```
 
-### Get content list with parameters
+### パラメータを指定したコンテンツ一覧の取得
 
 ```php
 $list = $client->list("endpoint", [
@@ -48,7 +54,7 @@ $list = $client->list("endpoint", [
   "limit" => 10,
   "offset" => 1,
   "orders" => ["createdAt", "-updatedAt"],
-  "q" => "PHP",
+  "q" => "こんにちは",
   "fields" => ["id", "title"],
   "filters" => "title[contains]microCMS",
   "depth" => 1
@@ -56,14 +62,14 @@ $list = $client->list("endpoint", [
 echo $list->contents[0]->title;
 ```
 
-### Get single content
+### 単一コンテンツの取得
 
 ```php
 $object = $client->get("endpoint", "my-content-id");
 echo $object->title;
 ```
 
-### Get single content with parameters
+### パラメータを指定した単一コンテンツの取得
 
 ```php
 $object = $client->get("endpoint", "my-content-id", [
@@ -74,74 +80,74 @@ $object = $client->get("endpoint", "my-content-id", [
 echo $object->title;
 ```
 
-### Get object form content
+### オブジェクト形式のコンテンツの取得
 
 ```php
 $object = $client->get("endpoint");
 echo $object->title;
 ```
 
-### Create content
+### コンテンツの作成
 
 ```php
 $createResult = $client->create(
   "endpoint",
   [
-    "title" => "Hello, microCMS!",
-    "contents" => "Awesome contents..."
+    "title" => "コンテンツ",
+    "contents" => "こんにちは、コンテンツ！"
   ]
 );
 echo $createResult->id;
 ```
 
-### Create content with specified ID
+### IDを指定したコンテンツの作成
 
 ```php
 $createResult = $client->create(
   "endpoint",
   [
     "id" => "new-my-content-id",
-    "title" => "Hello, microCMS!",
-    "contents" => "Awesome contents..."
+    "title" => "マイコンテンツ",
+    "contents" => "こんにちは、マイコンテンツ！"
   ]
 );
 echo $createResult->id;
 ```
 
-### Create draft content
+### 下書きコンテンツの作成
 
 ```php
 $createResult = $client->create(
   "endpoint",
   [
-    "title" => "Hello, microCMS!",
-    "contents" => "Awesome contents..."
+    "title" => "下書きコンテンツ",
+    "contents" => "こんにちは、下書きコンテンツ！"
   ],
   [ "status" => "draft" ]
 );
 echo $createResult->id;
 ```
 
-### Update content
+### コンテンツの更新
 
 ```php
 $updateResult = $client->update("endpoint", [
   "id" => "new-my-content-id",
-  "title" => "Hello, microCMS PHP SDK!"
+  "title" => "こんにちは、microCMS PHP SDK！"
 ]);
 echo $updateResult->id;
 ```
 
-### Update object form content
+### オブジェクト形式のコンテンツの更新
 
 ```php
 $updateResult = $client->update("endpoint", [
-  "title" => "Hello, microCMS PHP SDK!"
+  "title" => "こんにちは、microCMS PHP SDK！"
 ]);
 echo $updateResult->id;
 ```
 
-### Delete content
+### コンテンツの削除
 
 ```php
 $client->delete("endpoint", "new-my-content-id");
