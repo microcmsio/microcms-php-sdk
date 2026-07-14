@@ -1,6 +1,6 @@
 # microCMS PHP SDK
 
-[microCMS](https://document.microcms.io/manual/api-request) のPHP SDKです。
+[microCMS](https://document.microcms.io/) のPHP SDKです。
 
 ## 保守方針
 
