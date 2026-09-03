@@ -24,8 +24,9 @@
         }
     ],
     "require-dev": {
-        "psy/psysh": "@stable",
-        "phpstan/phpstan": "^2.0",
-        "phpunit/phpunit": "^9.5"
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "phpstan/phpstan": "^2.2",
+        "phpunit/phpunit": "^9.6",
+        "psy/psysh": "@stable"
     }
 }
