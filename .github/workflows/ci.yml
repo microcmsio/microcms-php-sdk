@@ -19,7 +19,7 @@ jobs:
         persist-credentials: false
 
     - name: Setup PHP
-      uses: step-security/setup-php@de840ac176c62a2558231845e09841c1b62e0bd0 # v2.37.2
+      uses: step-security/setup-php@786cfaf81ccf2c77ee50df95152798f6df9207aa # v2.40.0
       with:
         php-version: ${{ env.MAIN_PHP_VERSION }}
         tools: composer
@@ -52,7 +52,7 @@ jobs:
         persist-credentials: false
 
     - name: Setup PHP
-      uses: step-security/setup-php@de840ac176c62a2558231845e09841c1b62e0bd0 # v2.37.2
+      uses: step-security/setup-php@786cfaf81ccf2c77ee50df95152798f6df9207aa # v2.40.0
       with:
         php-version: ${{ matrix.php-versions }}
         tools: composer
