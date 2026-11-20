@@ -11,6 +11,9 @@ class Client
 
     public function __construct(string $serviceDomain, string $apiKey, ?\GuzzleHttp\Client $client = null)
     {
+        if (!preg_match('/\A[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\z/', $serviceDomain)) {
+            throw new \InvalidArgumentException("serviceDomain must be a single host label");
+        }
         $this->serviceDomain = $serviceDomain;
         $this->apiKey = $apiKey;
 
@@ -28,9 +31,8 @@ class Client
      */
     public function list(string $endpoint, array $options = [])
     {
-        $path = $endpoint;
         $response = $this->client->get(
-            $path,
+            $this->buildUri($endpoint),
             $this->buildOption([
                 "query" => $this->buildQuery($options)
             ])
@@ -45,9 +47,8 @@ class Client
      */
     public function get(string $endpoint, string $contentId = "", array $options = [])
     {
-        $path = $contentId ? implode("/", [$endpoint, $contentId]) : $endpoint;
         $response = $this->client->get(
-            $path,
+            $this->buildUri($endpoint, $contentId ? $contentId : null),
             $this->buildOption([
                 "query" => $this->buildQuery($options)
             ])
@@ -65,15 +66,15 @@ class Client
     {
         if (array_key_exists("id", $body)) {
             $method = "PUT";
-            $path =  implode("/", [$endpoint, $body["id"]]);
+            $uri = $this->buildUri($endpoint, $body["id"]);
         } else {
             $method = "POST";
-            $path = $endpoint;
+            $uri = $this->buildUri($endpoint);
         }
 
         $response = $this->client->request(
             $method,
-            $path,
+            $uri,
             $this->buildOption([
                 "json" => $body,
                 "query" => $options
@@ -90,7 +91,7 @@ class Client
     public function update(string $endpoint, array $body = [])
     {
         $response = $this->client->patch(
-            array_key_exists("id", $body) ? implode("/", [$endpoint, $body["id"]]) : $endpoint,
+            $this->buildUri($endpoint, array_key_exists("id", $body) ? $body["id"] : null),
             $this->buildOption([
                 "json" => array_filter(
                     $body,
@@ -106,8 +107,52 @@ class Client
 
     public function delete(string $endpoint, string $id): void
     {
-        $path = implode("/", [$endpoint, $id]);
-        $this->client->delete($path, $this->buildOption());
+        $this->client->delete($this->buildUri($endpoint, $id), $this->buildOption());
+    }
+
+    /**
+     * @param mixed $contentId
+     */
+    private function buildUri(string $endpoint, $contentId = null): \Psr\Http\Message\UriInterface
+    {
+        $host = sprintf("%s.microcms.io", $this->serviceDomain);
+        $path = "/api/v1/" . $this->pathSegment($endpoint);
+        if ($contentId !== null) {
+            $path .= "/" . $this->pathSegment($contentId);
+        }
+
+        $uri = new \GuzzleHttp\Psr7\Uri("https://" . $host . $path);
+        if (
+            $uri->getScheme() !== "https" ||
+            strtolower($uri->getHost()) !== strtolower($host) ||
+            $uri->getUserInfo() !== "" ||
+            $uri->getPort() !== null ||
+            $uri->getPath() !== $path
+        ) {
+            throw new \InvalidArgumentException("Request URI must stay on the microCMS service host");
+        }
+
+        return $uri;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function pathSegment($value): string
+    {
+        if (is_int($value)) {
+            $value = (string) $value;
+        }
+        if (
+            !is_string($value) ||
+            $value === "." ||
+            $value === ".." ||
+            !preg_match('/\A[A-Za-z0-9._~-]+\z/', $value)
+        ) {
+            throw new \InvalidArgumentException("Endpoint and content id must each be a single URL path segment");
+        }
+
+        return $value;
     }
 
     /**
@@ -119,7 +164,6 @@ class Client
     {
         return array_merge(
             [
-                'base_uri' => sprintf("https://%s.microcms.io/api/v1/", $this->serviceDomain),
                 'headers' => [
                     'X-MICROCMS-API-KEY' => $this->apiKey,
                 ]
