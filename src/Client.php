@@ -28,7 +28,7 @@ class Client
      */
     public function list(string $endpoint, array $options = [])
     {
-        $path = $endpoint;
+        $path = $this->buildPath($endpoint);
         $response = $this->client->get(
             $path,
             $this->buildOption([
@@ -45,7 +45,7 @@ class Client
      */
     public function get(string $endpoint, string $contentId = "", array $options = [])
     {
-        $path = $contentId ? implode("/", [$endpoint, $contentId]) : $endpoint;
+        $path = $contentId ? $this->buildPath($endpoint, $contentId) : $this->buildPath($endpoint);
         $response = $this->client->get(
             $path,
             $this->buildOption([
@@ -65,10 +65,10 @@ class Client
     {
         if (array_key_exists("id", $body)) {
             $method = "PUT";
-            $path =  implode("/", [$endpoint, $body["id"]]);
+            $path = $this->buildPath($endpoint, $body["id"]);
         } else {
             $method = "POST";
-            $path = $endpoint;
+            $path = $this->buildPath($endpoint);
         }
 
         $response = $this->client->request(
@@ -90,7 +90,7 @@ class Client
     public function update(string $endpoint, array $body = [])
     {
         $response = $this->client->patch(
-            array_key_exists("id", $body) ? implode("/", [$endpoint, $body["id"]]) : $endpoint,
+            array_key_exists("id", $body) ? $this->buildPath($endpoint, $body["id"]) : $this->buildPath($endpoint),
             $this->buildOption([
                 "json" => array_filter(
                     $body,
@@ -106,8 +106,28 @@ class Client
 
     public function delete(string $endpoint, string $id): void
     {
-        $path = implode("/", [$endpoint, $id]);
+        $path = $this->buildPath($endpoint, $id);
         $this->client->delete($path, $this->buildOption());
+    }
+
+    /**
+     * Endpoint names and content ids are each a single path segment. Anything
+     * outside this alphabet could add segments, dot segments, a query or an
+     * absolute URL, and send the API key to a different API or host.
+     *
+     * @param mixed ...$segments
+     */
+    private function buildPath(...$segments): string
+    {
+        foreach ($segments as $segment) {
+            if (is_int($segment)) {
+                $segment = (string) $segment;
+            }
+            if (!is_string($segment) || preg_match('/\A[A-Za-z0-9_-]+\z/', $segment) !== 1) {
+                throw new \InvalidArgumentException('Invalid endpoint or content id');
+            }
+        }
+        return implode("/", $segments);
     }
 
     /**
